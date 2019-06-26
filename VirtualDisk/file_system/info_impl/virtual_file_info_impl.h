@@ -5,7 +5,7 @@
 class VirtualFileInfoImpl : public VirtualNodeInfoImpl
 {
 public:
-	explicit VirtualFileInfoImpl(VirtualNode* node) : VirtualNodeInfoImpl(node)
+	VirtualFileInfoImpl(VirtualNode* node, const std::string& absPath) : VirtualNodeInfoImpl(node, absPath)
 	{
 		VirtualNode* selfNode = getNode();
 		m_file = dynamic_cast<VirtualFile*>(selfNode);

@@ -7,16 +7,16 @@
 
 static const int MAX_TIME_STR_BUFFER = 32;
 
-VirtualNodeInfoImpl* VirtualNodeInfoImpl::create(VirtualNode* node)
+VirtualNodeInfoImpl* VirtualNodeInfoImpl::create(VirtualNode* node, const std::string& absPath)
 {
 	if(node == NULL)
 		return new VirtualNodeInfoImpl();
 	else if(node->getMode() == VirtualNode::Directory)
-		return new VirtualDirectoryInfoImpl(node);
+		return new VirtualDirectoryInfoImpl(node, absPath);
 	else if(node->getMode() == VirtualNode::File)
-		return new VirtualFileInfoImpl(node);
+		return new VirtualFileInfoImpl(node, absPath);
 	else if(node->getMode() == VirtualNode::SoftLink)
-		return new VirtualSoftLinkInfoImpl(node);
+		return new VirtualSoftLinkInfoImpl(node, absPath);
 
 	return new VirtualNodeInfoImpl();
 }
@@ -78,6 +78,11 @@ std::string VirtualNodeInfoImpl::getCreateTime()
 	char buff[MAX_TIME_STR_BUFFER] = { '\0' };
 	strftime(buff, MAX_TIME_STR_BUFFER, "%H:%M", &info);
 	return std::string(buff);
+}
+
+std::string VirtualNodeInfoImpl::getFullPath()
+{
+	return m_fullPath;
 }
 
 bool VirtualNodeInfoImpl::isFile()

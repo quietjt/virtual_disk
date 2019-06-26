@@ -2,6 +2,7 @@
 
 #include "../predefine.h"
 #include "virtual_directory.h"
+#include "path.h"
 
 class VirtualNode;
 class VirtualNodeInfoImpl;
@@ -12,9 +13,11 @@ class VirtualNodeInfo
 public:
 	typedef VirtualNodeIterator Iterator;
 
-	explicit VirtualNodeInfo(const std::string& path);
+	VirtualNodeInfo();
 
-	explicit VirtualNodeInfo(VirtualNode* node = NULL);
+	explicit VirtualNodeInfo(const std::string& absPath);
+
+	VirtualNodeInfo(VirtualNode* node, const std::string& absPath);
 
 	VirtualNodeInfo(const VirtualNodeInfo& other);
 
@@ -35,6 +38,8 @@ public:
 	std::string getCreateDay();
 
 	std::string getCreateTime();
+
+	std::string getFullPath();
 
 	bool isFile();
 
@@ -62,11 +67,16 @@ private:
 class VirtualNodeIterator
 {
 public:
-	VirtualNodeIterator() : m_canIterator(false)
+	VirtualNodeIterator() : m_path(""), m_canIterator(false)
+	{
+
+	}
+
+	explicit VirtualNodeIterator(const std::string& path) : m_path(path), m_canIterator(false)
 	{
 	}
 
-	VirtualNodeIterator(VirtualDirectory::Iterator iter) : m_canIterator(true), m_iterator(iter)
+	VirtualNodeIterator(VirtualDirectory::Iterator iter, const std::string& path) : m_path(path), m_canIterator(true), m_iterator(iter)
 	{
 	}
 
@@ -93,10 +103,14 @@ public:
 		if(!m_canIterator)
 			return VirtualNodeInfo();
 
-		return VirtualNodeInfo(m_iterator->second);
+		const std::string& name = m_iterator->second->getName();
+		std::string curFullPath = Path::join(m_path, name, Path::InnerSeparator());
+
+		return VirtualNodeInfo(m_iterator->second, curFullPath);
 	}
 
 private:
 	VirtualDirectory::Iterator m_iterator;
 	bool m_canIterator;
+	std::string m_path;
 };

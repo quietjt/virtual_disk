@@ -2,12 +2,12 @@
 
 VirtualNodeInfo::Iterator VirtualDirectoryInfoImpl::begin()
 {
-	return VirtualNodeInfo::Iterator(m_dir->begin());
+	return VirtualNodeInfo::Iterator(m_dir->begin(), getFullPath());
 }
 
 VirtualNodeInfo::Iterator VirtualDirectoryInfoImpl::end()
 {
-	return VirtualNodeInfo::Iterator(m_dir->end());
+	return VirtualNodeInfo::Iterator(m_dir->end(), getFullPath());
 }
 
 bool VirtualDirectoryInfoImpl::isEmpty()

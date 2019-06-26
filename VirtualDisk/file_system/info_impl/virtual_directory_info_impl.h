@@ -6,7 +6,7 @@
 class VirtualDirectoryInfoImpl : public VirtualNodeInfoImpl
 {
 public:
-	explicit VirtualDirectoryInfoImpl(VirtualNode* node) : VirtualNodeInfoImpl(node)
+	VirtualDirectoryInfoImpl(VirtualNode* node, const std::string& absPath) : VirtualNodeInfoImpl(node, absPath)
 	{
 		VirtualNode* selfNode = getNode();
 		m_dir = dynamic_cast<VirtualDirectory*>(selfNode);

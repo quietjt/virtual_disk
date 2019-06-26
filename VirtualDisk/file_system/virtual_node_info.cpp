@@ -2,23 +2,28 @@
 #include "virtual_file_system.h"
 #include "info_impl/virtual_node_info_impl.h"
 
-VirtualNodeInfo::VirtualNodeInfo(VirtualNode* node)
+VirtualNodeInfo::VirtualNodeInfo() : m_isExist(false)
 {
-	m_impl = VirtualNodeInfoImpl::create(node);
+	m_impl = VirtualNodeInfoImpl::create(NULL, "");
+}
+
+VirtualNodeInfo::VirtualNodeInfo(VirtualNode* node, const std::string& absPath)
+{
+	m_impl = VirtualNodeInfoImpl::create(node, absPath);
 	m_isExist = node == NULL ? false : true;
 }
 
-VirtualNodeInfo::VirtualNodeInfo(const std::string& path)
+VirtualNodeInfo::VirtualNodeInfo(const std::string& absPath)
 {
-	VirtualNode* node = VirtualFileSystem::getInstPtr()->getNode(path);
+	VirtualNode* node = VirtualFileSystem::getInstPtr()->getNode(absPath);
 
-	m_impl = VirtualNodeInfoImpl::create(node);
+	m_impl = VirtualNodeInfoImpl::create(node, absPath);
 	m_isExist = node == NULL ? false : true;
 }
 
 VirtualNodeInfo::VirtualNodeInfo(const VirtualNodeInfo& other) : m_isExist(other.m_isExist)
 {
-	m_impl = VirtualNodeInfoImpl::create(other.m_impl->getNode());
+	m_impl = VirtualNodeInfoImpl::create(other.m_impl->getNode(), other.m_impl->getFullPath());
 }
 
 VirtualNodeInfo& VirtualNodeInfo::operator=(const VirtualNodeInfo& other)
@@ -31,7 +36,7 @@ VirtualNodeInfo& VirtualNodeInfo::operator=(const VirtualNodeInfo& other)
 		m_impl = NULL;
 	}
 
-	m_impl = VirtualNodeInfoImpl::create(other.m_impl->getNode());
+	m_impl = VirtualNodeInfoImpl::create(other.m_impl->getNode(), other.m_impl->getFullPath());
 
 	return *this;
 }
@@ -63,6 +68,11 @@ std::string VirtualNodeInfo::getCreateDay()
 std::string VirtualNodeInfo::getCreateTime()
 {
 	return m_impl->getCreateTime();
+}
+
+std::string VirtualNodeInfo::getFullPath()
+{
+	return m_impl->getFullPath();
 }
 
 bool VirtualNodeInfo::isFile() 

@@ -6,7 +6,7 @@
 class VirtualSoftLinkInfoImpl : public VirtualNodeInfoImpl
 {
 public:
-	explicit VirtualSoftLinkInfoImpl(VirtualNode* node) : VirtualNodeInfoImpl(node)
+	VirtualSoftLinkInfoImpl(VirtualNode* node, const std::string& absPath) : VirtualNodeInfoImpl(node, absPath)
 	{
 		VirtualNode* selfNode = getNode();
 		m_softlink = dynamic_cast<VirtualSoftLink*>(selfNode);

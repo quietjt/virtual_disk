@@ -7,9 +7,9 @@
 class VirtualNodeInfoImpl
 {
 public:
-	static VirtualNodeInfoImpl* create(VirtualNode* node);
+	static VirtualNodeInfoImpl* create(VirtualNode* node, const std::string& absPath);
 
-	explicit VirtualNodeInfoImpl(VirtualNode* node = NULL) : m_node(node)
+	explicit VirtualNodeInfoImpl(VirtualNode* node = NULL, const std::string& absPath = "") : m_node(node), m_fullPath(absPath)
 	{
 	}
 
@@ -20,6 +20,8 @@ public:
 	std::string getCreateDay();
 
 	std::string getCreateTime();
+
+	std::string getFullPath();
 
 	virtual bool isFile();
 
@@ -50,4 +52,5 @@ public:
 
 private:
 	VirtualNode* m_node;
+	std::string m_fullPath;
 };
