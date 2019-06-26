@@ -77,7 +77,9 @@ void DirCmd::displayPath(const std::string& absPath, VirtualConsole& virtualCons
 
 	if(!nodeInfo.isExist())
 	{
-		output << "找不到路径 : " << absPath << std::endl;
+		std::string dpath = absPath;
+		Path::transformSeparator(dpath, virtualConsole.getDisplaySeparator());
+		output << "找不到路径 : " << dpath << std::endl;
 		return;
 	}
 

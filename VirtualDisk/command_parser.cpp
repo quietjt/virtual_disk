@@ -12,13 +12,36 @@ void CommandParser::getNext(std::string* outValue)
 	skipSpace();
 	int curI = m_curPos;
 	
-	while(m_commandLine[curI] != ' ' && m_commandLine[curI] != '\n' && 
-			m_commandLine[curI] != '\0')
+	outValue->clear();
+
+	bool waitNextQuot = false;
+
+	char ch;
+	while(true)
 	{
+		ch = m_commandLine[curI];
+		if(ch == '\n' || ch == '\0')
+			break;
+
+		if(waitNextQuot)
+		{
+			if(ch != '\"')
+				outValue->push_back(ch);
+			else
+				waitNextQuot = false;
+		}
+		else
+		{
+			if(ch == '\"')
+				waitNextQuot = true;
+			else if(ch != ' ')
+				outValue->push_back(ch);
+			else
+				break;
+		}
+
 		curI++;
 	}
-
-	*outValue = m_commandLine.substr(m_curPos, curI - m_curPos);
 	m_curPos = curI;
 }
 
