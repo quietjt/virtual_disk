@@ -96,7 +96,6 @@ private:
 
 	VirtualNode* createNodeInternal(const std::string& name, VirtualNode::Mode mode);
 
-
 private:
 	std::map<std::string, VirtualNode*> m_nodes;
 	DirType m_dirType;

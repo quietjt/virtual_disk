@@ -34,6 +34,7 @@ void SaveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 	if(!ar.open(absRealPath))
 	{
 		output << path << "²»´æÔÚ" << std::endl;
+		ar.close();
 		return;
 	}
 	VirtualFileSystem::getInstPtr()->save(ar);

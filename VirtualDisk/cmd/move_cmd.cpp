@@ -35,9 +35,10 @@ void MoveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 	std::string destPathName;
 		
 	std::string absDestPath = Path::getAbsPath(virtualConsole.getCurDirectoryPath(), destPath);
-	std::string::iterator lastIt = absDestPath.end() - 1;
+	
+	std::string::iterator lastIt = destPath.end() - 1;
 
-	if(*lastIt == '\\' || *lastIt == '/')
+	if(*lastIt == '\\' || *lastIt == '/' || *lastIt == '.')
 	{
 		destDirName = Path::getDirectoryName(absDestPath);
 		destPathName = srcPathName;

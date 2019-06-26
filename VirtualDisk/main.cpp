@@ -3,12 +3,9 @@
 
 #include "virtual_console.h"
 #include "file_system/virtual_file_system.h"
-
 #include "cmd/cmd_header.h"
 
 using namespace std;
-
-#include <Windows.h>
 
 int main(int argc, char* argv[])
 {

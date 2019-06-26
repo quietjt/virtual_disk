@@ -101,25 +101,7 @@ void TextReadArchive::serialize(char*& value, int size, const std::string& name 
 		getline(m_stream, line);
 		return;
 	}
-
 	m_stream.get(c);
 
-	int unreadSize = size;
-	int readSize = 0;
-	char* p = value;
-
 	m_stream.read(value, size);
-
-	int readsize = m_stream.gcount();
-
-	//const int copyMaxSize = 1024 * 1024;
-
-	//while (unreadSize > 0)
-	//{
-	//	
-	//	readSize = unreadSize > copyMaxSize ? copyMaxSize : unreadSize;
-	//	m_stream.read(p, readSize);
-	//	p += readSize;
-	//	unreadSize -= readSize;
-	//}
 }
