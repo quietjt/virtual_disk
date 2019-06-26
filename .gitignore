@@ -1,0 +1,5 @@
+*.ncb
+Document/*
+Debug/*
+VirtualDisk/Debug/*
+VirtualDisk/VirtualDisk.vcproj.TIANJING.Administrator.user

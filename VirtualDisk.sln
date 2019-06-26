@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualDisk", "VirtualDisk\VirtualDisk.vcproj", "{AE99DDDE-BE63-4434-B79A-BBFC2735F2DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE99DDDE-BE63-4434-B79A-BBFC2735F2DF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AE99DDDE-BE63-4434-B79A-BBFC2735F2DF}.Debug|Win32.Build.0 = Debug|Win32
+		{AE99DDDE-BE63-4434-B79A-BBFC2735F2DF}.Release|Win32.ActiveCfg = Release|Win32
+		{AE99DDDE-BE63-4434-B79A-BBFC2735F2DF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
