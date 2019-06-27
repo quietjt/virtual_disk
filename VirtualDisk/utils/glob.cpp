@@ -9,16 +9,14 @@ void Glob::search(const std::string& pattern, std::vector<std::string>& outValue
 
 	if(Path::isVirtualPath(pattern))
 	{
-		std::string dirName = Path::getDirectoryName(pattern);
-		VirtualNode* node = VirtualFileSystem::getInstPtr()->getNode(dirName);
+		VirtualDirectory* dir = VirtualFileSystem::getInstPtr()->getDirectoryNode(pattern);
 
-		if(node == NULL || node->getMode() != VirtualNode::Directory)
+		if(!dir)
 			return;
 
+		std::string dirName = Path::getDirectoryName(pattern);
 		std::string pathName = Path::getPathName(pattern);
 		std::string lowerPathName = StringUtils::getLower(pathName);
-
-		VirtualDirectory* dir =  (VirtualDirectory*) node;
 
 		for(VirtualDirectory::Iterator it = dir->begin(); it != dir->end(); it++)
 		{

@@ -23,8 +23,7 @@ public:
 
 	bool createSoftLink(const std::string& softLinkPath, const std::string& targetPath);
 
-	bool move(const std::string& srcDirName, const std::string& srcPathName , 
-		const std::string& destDirName, const std::string& destPathName);
+	bool move(const std::string& srcPath, const std::string& destPath);
 
 	bool rename(const std::string& path, const std::string& newName);
 
@@ -35,6 +34,9 @@ public:
 	// pathName如果是软链接，不进行进一步解析
 	VirtualNode* getNode(const std::string& path);
 
+	// path = dirname/filename   获取dirname所代表的实际路径
+	VirtualDirectory* getDirectoryNode(const std::string& path);
+
 	void save(IArchive& ar);
 
 	bool load(IArchive& ar);
@@ -42,7 +44,7 @@ public:
 private:
 	void createDefaultDrive(const std::string& rootDir);
 
-	VirtualDirectory* getDirectoryNode(const std::string& path);
+
 
 	// pathName如果是软链接，进行进一步解析
 	VirtualNode* getNodeInner(const std::string& path);

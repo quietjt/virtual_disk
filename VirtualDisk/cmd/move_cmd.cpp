@@ -38,24 +38,38 @@ void MoveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 	
 	std::string::iterator lastIt = destPath.end() - 1;
 
+	VirtualNodeInfo nodeInfo(absDestPath);
+	if(nodeInfo.isSoftlink())
+	{
+		nodeInfo = nodeInfo.getFinalTargetLinkInfo();
+	}
+
 	if(*lastIt == '\\' || *lastIt == '/' || *lastIt == '.')
 	{
-		destDirName = Path::getDirectoryName(absDestPath);
+		bool haveError = false;
+		if(!nodeInfo.isExist())
+		{
+			output << "系统找不到指定的路径" << std::endl;
+			haveError = true;
+		}
+		else if(nodeInfo.isFile())
+		{
+			output << "参数错误" << std::endl;
+			haveError = true;
+		}
+
+		if(haveError)
+			return;
+
+		destDirName = nodeInfo.getFullPath();
 		destPathName = srcPathName;
 	}
 	else
 	{
-		VirtualNodeInfo nodeInfo(absDestPath);
-
-		if(nodeInfo.isSoftlink())
+		if(nodeInfo.isDirectory())
 		{
-			VirtualNodeInfo finalTargetLink = nodeInfo.getFinalTargetLinkInfo();
-			if(finalTargetLink.isDirectory())
-			{
-				std::string finalTargetLinkName = finalTargetLink.getName();
-				destDirName = Path::join(virtualConsole.getCurDirectoryPath(), finalTargetLinkName, Path::InnerSeparator());
-				destPathName = srcPathName;
-			}
+			destDirName = nodeInfo.getFullPath();
+			destPathName = srcPathName;
 		}
 		else
 		{
@@ -79,5 +93,8 @@ void MoveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 		return;
 	}
 
-	VirtualFileSystem::getInstPtr()->move(srcDirName, srcPathName,  destDirName, destPathName);
+	std::string finalSrcPath = Path::join(srcDirName, srcPathName, Path::InnerSeparator());
+	std::string finalDestPath = Path::join(destDirName, destPathName, Path::InnerSeparator());
+
+	VirtualFileSystem::getInstPtr()->move(finalSrcPath, finalDestPath);
 }
