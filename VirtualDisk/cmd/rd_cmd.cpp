@@ -49,10 +49,19 @@ void RdCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 			output << "系统找不到指定的文件" << std::endl;
 			haveError = true;
 		}
-		else if(nodeInfo.isSoftlink() || nodeInfo.isFile())
+		else if(nodeInfo.isFile())
 		{
 			output << "目录名称无效" << std::endl;
 			haveError = true;
+		}
+		else if(nodeInfo.isSoftlink())
+		{
+			VirtualNodeInfo targetNodeInfo = nodeInfo.getFinalTargetLinkInfo();
+			if(!targetNodeInfo.isExist() || !targetNodeInfo.isDirectory())
+			{
+				output << "目录名称无效" << std::endl;
+				haveError = true;
+			}
 		}
 
 		if(!isDelFullDir && !nodeInfo.isEmpty())
