@@ -89,6 +89,8 @@ bool VirtualFileSystem::createDirectory(const std::string& path)
 	Path::split(path, pathlets);
 
 	VirtualDirectory* curDir = m_rootDir;
+	std::string curPath = "";
+
 	for(std::vector<std::string>::iterator it = pathlets.begin(); it != pathlets.end(); it++)
 	{
 		if(*it == "")
@@ -97,22 +99,46 @@ bool VirtualFileSystem::createDirectory(const std::string& path)
 		VirtualNode* subNode = (VirtualNode*) curDir->getChild(*it);
 		if(subNode != NULL)
 		{
-			if( subNode->getMode() == VirtualNode::Directory)
+			bool isSubDir = true;
+
+			if(subNode->getMode() == VirtualNode::SoftLink)
 			{
-				curDir = (VirtualDirectory*) subNode;
-				continue;
+				VirtualSoftLink* softLink = (VirtualSoftLink*)subNode;
+				curPath = Path::getAbsPath(curPath, softLink->getTargetLinkPath());
+				subNode = getNodeInner(curPath);
+
+				if(subNode->getMode() != VirtualNode::Directory)
+				{
+					isSubDir = false;
+				}
 			}
-			else
+			else if(subNode->getMode() == VirtualNode::File)
+			{
+				isSubDir = false;
+			}
+
+			if(!isSubDir)
 			{
 				return false;
 			}
+			else
+			{
+				curDir = (VirtualDirectory*) subNode;
+				Path::concate(curPath, curDir->getName(), Path::InnerSeparator());
+			}
+		}
+		else
+		{
+			VirtualDirectory* subDir = curDir->createDirectory(*it);
+			if(subDir == NULL)
+				return false;
+
+			curDir = subDir;
 		}
 		
-		VirtualDirectory* subDir = curDir->createDirectory(*it);
-		if(subDir == NULL)
-			return false;
+	
 
-		curDir = subDir;
+
 	}
 
 	return true;
