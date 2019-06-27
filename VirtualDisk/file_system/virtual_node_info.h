@@ -57,7 +57,7 @@ public:
 
 	std::string getTargetLinkPath();
 
-	VirtualNodeInfo getFinalTargetLinkInfo(const std::string& curPath);
+	VirtualNodeInfo getFinalTargetLinkInfo();
 
 private:
 	VirtualNodeInfoImpl* m_impl;

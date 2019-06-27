@@ -115,9 +115,9 @@ std::string VirtualNodeInfo::getTargetLinkPath()
 	return m_impl->getTargetLinkPath();
 }
 
-VirtualNodeInfo VirtualNodeInfo::getFinalTargetLinkInfo(const std::string& curPath)
+VirtualNodeInfo VirtualNodeInfo::getFinalTargetLinkInfo()
 {
-	return m_impl->getFinalTargetLinkInfo(curPath);
+	return m_impl->getFinalTargetLinkInfo();
 }
 
 VirtualNodeInfo::Iterator VirtualNodeInfo::begin()

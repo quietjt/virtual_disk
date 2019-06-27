@@ -49,7 +49,7 @@ void CdCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 		}
 		else if(info.isSoftlink())
 		{
-			VirtualNodeInfo targetInfo = info.getFinalTargetLinkInfo(virtualConsole.getCurDirectoryPath());
+			VirtualNodeInfo targetInfo = info.getFinalTargetLinkInfo();
 			if(!targetInfo.isExist())
 			{
 				output << "系统找不到指定的文件" << std::endl;
@@ -60,7 +60,7 @@ void CdCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 			}
 			else
 			{
-				std::string targetPath = targetInfo.getFullPath();
+				std::string targetPath = info.getFullPath();
 				Path::transformSeparator(targetPath, virtualConsole.getDisplaySeparator());
 				virtualConsole.setCurDirectoryPath(targetPath);
 			}

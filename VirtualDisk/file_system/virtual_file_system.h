@@ -32,6 +32,7 @@ public:
 
 	bool removeAllFilesInDir(const std::string& path);
 
+	// pathName如果是软链接，不进行进一步解析
 	VirtualNode* getNode(const std::string& path);
 
 	void save(IArchive& ar);
@@ -40,6 +41,11 @@ public:
 
 private:
 	void createDefaultDrive(const std::string& rootDir);
+
+	VirtualDirectory* getDirectoryNode(const std::string& path);
+
+	// pathName如果是软链接，进行进一步解析
+	VirtualNode* getNodeInner(const std::string& path);
 
 private:
 	VirtualDirectory* m_rootDir;

@@ -1,5 +1,6 @@
 #include "virtual_file_system.h"
 #include "path.h"
+#include "virtual_soft_link.h"
 #include <fstream>
 
 void VirtualFileSystem::initWithDriveName(const std::string& rootDir)
@@ -17,24 +18,68 @@ void VirtualFileSystem::createDefaultDrive(const std::string& name)
 
 VirtualNode* VirtualFileSystem::getNode(const std::string& path)
 {
+	std::string dirName = Path::getDirectoryName(path);
+	std::string pathName = Path::getPathName(path);
+
+	VirtualDirectory* dirNode = getDirectoryNode(dirName);
+
+	if(!dirNode)
+		return NULL;
+
+	if(pathName == "" && Path::isDrive(dirName))
+		return (VirtualNode*) dirNode;
+
+	return dirNode->getChild(pathName);
+}
+
+VirtualNode* VirtualFileSystem::getNodeInner(const std::string& path)
+{
 	std::vector<std::string> pathlets;
 	Path::split(path, pathlets);
 
 	VirtualNode* curNode = (VirtualNode*) m_rootDir;
+	VirtualNode* subNode = NULL;
+
+	std::string curPath = "";
 
 	for(std::vector<std::string>::iterator it = pathlets.begin(); it != pathlets.end(); it++)
 	{
-		if(curNode->getMode() != VirtualNode::Directory)
-			return NULL;
+		if(curNode == NULL || curNode->getMode() != VirtualNode::Directory)
+		{
+			break;
+		}
 
 		VirtualDirectory* dir = (VirtualDirectory*) curNode;
-		curNode = dir->getChild(*it);
-	
-		if(curNode == NULL)
-			break;
+		subNode = dir->getChild(*it);
+
+		if(subNode != NULL)
+		{
+			if(subNode->getMode() == VirtualNode::Directory)
+			{
+				Path::concate(curPath, subNode->getName(), Path::InnerSeparator());
+			}
+			else if(subNode->getMode() == VirtualNode::SoftLink)
+			{
+				VirtualSoftLink* softLink = (VirtualSoftLink*)subNode;
+				curPath = Path::getAbsPath(curPath, softLink->getTargetLinkPath());
+				subNode = getNodeInner(curPath);
+			}
+		}
+
+		curNode = subNode;
 	}
 
 	return curNode;
+}
+
+VirtualDirectory* VirtualFileSystem::getDirectoryNode(const std::string& path)
+{
+	VirtualNode* node = getNodeInner(path);
+
+	if(node == NULL || node->getMode() != VirtualNode::Directory)
+		return NULL;
+
+	return (VirtualDirectory*)node;
 }
 
 bool VirtualFileSystem::createDirectory(const std::string& path)
@@ -110,12 +155,11 @@ bool VirtualFileSystem::rename(const std::string& path, const std::string& newNa
 	std::string parentDirName = Path::getDirectoryName(path);
 	std::string pathName = Path::getPathName(path);
 
-	VirtualNode* parentNode = getNode(parentDirName);
+	VirtualDirectory* dir = getDirectoryNode(parentDirName);
 
-	if(parentNode == NULL || parentNode->getMode() != VirtualNode::Directory)
+	if(dir == NULL)
 		return false;
 	
-	VirtualDirectory* dir = (VirtualDirectory*)parentNode;
     return dir->renameChild(pathName, newName);
 }
 
@@ -125,12 +169,11 @@ bool VirtualFileSystem::remove(const std::string& path)
 	std::string parentDirName = Path::getDirectoryName(path);
 	std::string pathName = Path::getPathName(path);
 
-	VirtualNode* parentNode = getNode(parentDirName);
+	VirtualDirectory* dir = getDirectoryNode(parentDirName);
 
-	if(parentNode == NULL || parentNode->getMode() != VirtualNode::Directory)
+	if(dir == NULL)
 		return false;
 
-	VirtualDirectory* dir = (VirtualDirectory*)parentNode;
 	return dir->removeChild(pathName);
 }
 

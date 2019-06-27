@@ -125,7 +125,7 @@ std::string VirtualNodeInfoImpl::getTargetLinkPath()
 	return "";
 }
 
-VirtualNodeInfo VirtualNodeInfoImpl::getFinalTargetLinkInfo(const std::string& curPath)
+VirtualNodeInfo VirtualNodeInfoImpl::getFinalTargetLinkInfo()
 {
 	return VirtualNodeInfo();
 }

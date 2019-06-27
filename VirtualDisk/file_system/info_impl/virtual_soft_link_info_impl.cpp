@@ -2,12 +2,14 @@
 #include "../path.h"
 #include <algorithm>
 
-VirtualNodeInfo VirtualSoftLinkInfoImpl::getFinalTargetLinkInfo(const std::string& curPath)
+VirtualNodeInfo VirtualSoftLinkInfoImpl::getFinalTargetLinkInfo()
 {
 	std::vector<std::string> tracks;
 
+	std::string curDirPath = Path::getDirectoryName(this->getFullPath());
+
 	std::string targetLinkPath = getTargetLinkPath();
-	std::string absPath = Path::getAbsPath(curPath, targetLinkPath);
+	std::string absPath = Path::getAbsPath(curDirPath, targetLinkPath);
 
 	VirtualNodeInfo info(absPath);
 
@@ -21,7 +23,7 @@ VirtualNodeInfo VirtualSoftLinkInfoImpl::getFinalTargetLinkInfo(const std::strin
 		if(it == tracks.end())
 		{
 			targetLinkPath = info.getTargetLinkPath();
-			absPath = Path::getAbsPath(curPath, targetLinkPath);
+			absPath = Path::getAbsPath(curDirPath, targetLinkPath);
 			info = VirtualNodeInfo(absPath);
 
 			tracks.push_back(linkFullPath);
@@ -35,4 +37,3 @@ VirtualNodeInfo VirtualSoftLinkInfoImpl::getFinalTargetLinkInfo(const std::strin
 
 	return info;
 }
-

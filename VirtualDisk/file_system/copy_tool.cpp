@@ -64,7 +64,7 @@ void CopyTool::prepare()
 
 void CopyTool::overrideCurrent()
 {
-	std::string pathName = Path::getPathName(m_destPath);
+	std::string pathName = Path::getPathName(*m_srcPathIt);
 
 	m_destDir->removeChild(pathName);
 
@@ -130,7 +130,7 @@ bool CopyTool::execute()
 		if(m_destDir->contains(pathName))
 		{
 			m_error = CopyTool::SameFile;
-			m_sameFileName = m_destPath;
+			m_sameFileName = Path::join(m_destPath, pathName, Path::InnerSeparator());
 			return false;
 		}
 
@@ -155,7 +155,7 @@ bool CopyTool::execute()
 		if(m_destDir->contains(pathName))
 		{
 			m_error = CopyTool::SameFile;
-			m_sameFileName = m_destPath;
+			m_sameFileName = Path::join(m_destPath, pathName, Path::InnerSeparator());
 			m_pendingSrcFile = (VirtualFile*) srcNode;
 			return false;
 		}

@@ -32,7 +32,7 @@ public:
 		return m_softlink->getTargetLinkPath();
 	}
 
-	virtual VirtualNodeInfo getFinalTargetLinkInfo(const std::string& curPath);
+	virtual VirtualNodeInfo getFinalTargetLinkInfo();
 
 private:
 	VirtualSoftLink* m_softlink;

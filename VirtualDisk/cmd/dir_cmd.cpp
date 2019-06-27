@@ -91,7 +91,19 @@ void DirCmd::displayPath(const std::string& absPath, VirtualConsole& virtualCons
 	Path::transformSeparator(displayDir, virtualConsole.getDisplaySeparator());
 	output << " " << displayDir << virtualConsole.getDisplaySeparator() << " 的目录\n\n";
 
-	if(!nodeInfo.isDirectory())
+
+	if(nodeInfo.isSoftlink())
+	{
+		VirtualNodeInfo targetNodeInfo = nodeInfo.getFinalTargetLinkInfo();
+		if(!targetNodeInfo.isExist())
+		{
+			output << "路径无效" << std::endl;
+		}
+
+		nodeInfo = targetNodeInfo;
+	}
+
+	if(nodeInfo.isFile())
 	{
 		displayNodeInfo(nodeInfo, output, isOnlyDir, &totalSize, &totalFile, &totalDir);
 	}

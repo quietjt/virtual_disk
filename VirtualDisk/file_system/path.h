@@ -34,4 +34,6 @@ public:
 	static std::string getRealPath(const std::string& value);
 
 	static std::string join(const std::string& dir, const std::string& fileName, char separator);
+
+	static void concate(std::string& outValue, const std::string& fileName, char separator);
 };

@@ -36,7 +36,9 @@ void CopyCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 			{
 				while(true)
 				{
-					output << "¸²¸Ç " << copyTool.getSameFileName()  << " Âð£¿£¨Yes/No£©£º";
+					std::string sameFileName = copyTool.getSameFileName();
+					Path::transformSeparator(sameFileName, virtualConsole.getDisplaySeparator());
+					output << "¸²¸Ç " << sameFileName << " Âð£¿£¨Yes/No£©£º";
 
 					std::string result;
 					virtualConsole.getLine(result);

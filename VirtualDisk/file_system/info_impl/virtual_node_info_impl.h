@@ -39,7 +39,7 @@ public:
 
 	virtual std::string getTargetLinkPath();
 
-	virtual VirtualNodeInfo getFinalTargetLinkInfo(const std::string& curPath);
+	virtual VirtualNodeInfo getFinalTargetLinkInfo();
 
 	virtual VirtualNodeInfo::Iterator begin();
 

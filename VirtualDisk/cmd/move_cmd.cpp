@@ -49,7 +49,7 @@ void MoveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 
 		if(nodeInfo.isSoftlink())
 		{
-			VirtualNodeInfo finalTargetLink = nodeInfo.getFinalTargetLinkInfo(virtualConsole.getCurDirectoryPath());
+			VirtualNodeInfo finalTargetLink = nodeInfo.getFinalTargetLinkInfo();
 			if(finalTargetLink.isDirectory())
 			{
 				std::string finalTargetLinkName = finalTargetLink.getName();

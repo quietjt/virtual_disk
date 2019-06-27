@@ -180,6 +180,10 @@ std::string Path::getDirectoryName(const std::string& value)
 std::string Path::getPathName(const std::string& value)
 {
 	std::size_t found = value.find_last_of("/\\");
+
+	if(found == std::string::npos)
+		return "";
+
 	std::string ret = value.substr(found + 1);
 	return ret;
 }
@@ -196,4 +200,13 @@ std::string Path::join(const std::string& dir, const std::string& fileName , cha
 	ss << dir << separator << fileName;
 	std::string ret = ss.str();
 	return ret;
+}
+
+void Path::concate(std::string& outValue, const std::string& fileName , char separator)
+{
+	if(outValue != "")
+	{
+		outValue.push_back(separator);
+	}
+	outValue.append(fileName);
 }
