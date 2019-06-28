@@ -1,9 +1,11 @@
 #pragma once
 
-#include "i_command.h"
+#include "cmd_base.h"
 
-class MoveCmd : public ICommand
+class MoveCmd : public CommandBase
 {
 public:
 	virtual void execute(CommandParser& cmdParser, VirtualConsole& virtualConsole);
+protected:
+	virtual void registerOptions();
 };

@@ -3,6 +3,11 @@
 #include "../file_system/virtual_node_info.h"
 #include "../file_system/path.h"
 
+void MoveCmd::registerOptions()
+{
+	m_supportOptions.insert("y");
+}
+
 void MoveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 {
 	std::ostream& output = virtualConsole.getOutput();
@@ -11,6 +16,11 @@ void MoveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 	std::vector<std::string> positionalOptionals;
 
 	cmdParser.parseArg(optionals, positionalOptionals);
+
+	if(!checkOptions(output, optionals))
+	{
+		return;
+	}
 
 	if(positionalOptionals.size() != 2)
 	{
@@ -86,11 +96,42 @@ void MoveCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 	
 	std::string fullPath = Path::join(destDirName, destPathName, Path::InnerSeparator());
 
-	if(Path::exists(fullPath))
+	bool isForceOverride = (optionals.find("y") != optionals.end());
+
+	bool isOverride = false;
+
+	if(isForceOverride)
 	{
-		Path::transformSeparator(fullPath, virtualConsole.getDisplaySeparator());
-		output << "已存在文件 " << fullPath << std::endl;
-		return;
+		isOverride = true;
+	}
+	else
+	{
+		if(Path::exists(fullPath))
+		{
+			Path::transformSeparator(fullPath, virtualConsole.getDisplaySeparator());
+			std::string line;
+			while(true)
+			{
+				output << "覆盖 " << fullPath << " 吗? （Yes/No）：";
+				virtualConsole.getLine(line);
+				line = StringUtils::getLower(line);
+				if(line == "yes")
+				{
+					isOverride = true;
+					break;
+				}
+				else if(line == "no")
+				{
+					isOverride = false;
+					return;
+				}
+			}
+		}
+	}
+
+	if(isOverride)
+	{
+		VirtualFileSystem::getInstPtr()->remove(fullPath);
 	}
 
 	std::string finalSrcPath = Path::join(srcDirName, srcPathName, Path::InnerSeparator());
