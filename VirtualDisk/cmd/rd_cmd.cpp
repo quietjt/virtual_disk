@@ -12,7 +12,7 @@ void RdCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 
 	cmdParser.parseArg(optionals, positionalOptionals);
 
-	bool isDelFullDir = (optionals.find("/s") != optionals.end());
+	bool isDelFullDir = (optionals.find("s") != optionals.end());
 
 	if(positionalOptionals.size() < 1)
 	{

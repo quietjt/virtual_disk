@@ -43,7 +43,6 @@ void VirtualConsole::setCurDirectoryPath(const std::string& path)
 void VirtualConsole::run() 
 {
 	std::string input;
-	std::string cmdName;
 	while(true)
 	{
 		printHeader();
@@ -53,26 +52,7 @@ void VirtualConsole::run()
 		if(input == "\n")
 			continue;
 
-		m_cmdParser.setCommandLine(input);
-		m_cmdParser.getNext(&cmdName);
-
-		std::string lowerCmdName = StringUtils::getLower(cmdName);
-		//if(lowerCmdName == s_quietCommand)
-		//{
-		//	break;
-		//}
-
-		ICommand* cmd = getCommand(lowerCmdName);
-		if(cmd)
-		{
-			cmd->execute(m_cmdParser, *this);
-		}
-		else
-		{
-			getOutput() << "Unknown command : " << cmdName << "\n";
-		}
-
-		getOutput() << "\n";
+		executeCmd(input);
 	}
 }
 
@@ -96,7 +76,10 @@ void VirtualConsole::addCommand(const std::string& cmdName, ICommand* cmd)
 	}
 
 	if(it == m_commands.end())
+	{//TODO cmd有别的类初始化
 		m_commands.insert(std::make_pair(cmdName, cmd));
+		cmd->initialize();
+	}
 }
 
 ICommand* VirtualConsole::getCommand(const std::string& cmdName)
@@ -117,4 +100,30 @@ void VirtualConsole::printHeader()
 		getOutput() << getDisplaySeparator();
 	}
 	getOutput() << ">";
+}
+
+void VirtualConsole::executeCmd(const std::string& cmdStr)
+{
+	std::string cmdName;
+
+	m_cmdParser.setCommandLine(cmdStr);
+	m_cmdParser.getNext(&cmdName);
+
+	std::string lowerCmdName = StringUtils::getLower(cmdName);
+	//if(lowerCmdName == s_quietCommand)
+	//{
+	//	break;
+	//}
+
+	ICommand* cmd = getCommand(lowerCmdName);
+	if(cmd)
+	{
+		cmd->execute(m_cmdParser, *this);
+	}
+	else
+	{
+		getOutput() << "Unknown command : " << cmdName << "\n";
+	}
+
+	getOutput() << "\n";
 }

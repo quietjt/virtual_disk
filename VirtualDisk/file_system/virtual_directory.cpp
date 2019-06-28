@@ -90,7 +90,7 @@ VirtualNode* VirtualDirectory::createNodeInternal(const std::string& name, Virtu
 	if(it != m_nodes.end() && it->second->getMode() == mode)
 		return NULL;
 
-	VirtualNode* node;
+	VirtualNode* node = NULL;
 
 	switch(mode)
 	{
@@ -110,9 +110,15 @@ VirtualNode* VirtualDirectory::createNodeInternal(const std::string& name, Virtu
 			node = (VirtualNode*) new VirtualSoftLink();
 		}
 		break;
+	default:
+		{
+			std::cerr << "Unknow VirtualNode Type : " << mode << std::endl;
+		}
+		break;
 	}
 
-	node->setName(name);
+	if(node != NULL)
+		node->setName(name);
 
 	return node;
 }

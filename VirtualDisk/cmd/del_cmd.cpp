@@ -4,6 +4,12 @@
 #include "../file_system/virtual_node_info.h"
 #include <queue>
 
+
+void DelCmd::registerOptions()
+{
+	m_supportOptions.insert("s");
+}
+
 void DelCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 {
 	std::ostream& output = virtualConsole.getOutput();
@@ -13,7 +19,12 @@ void DelCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 
 	cmdParser.parseArg(optionals, positionalOptionals);
 
-	bool isRecursive = (optionals.find("/s") != optionals.end());
+	if(!checkOptions(output, optionals))
+	{
+		return;
+	}
+
+	bool isRecursive = (optionals.find("s") != optionals.end());
 
 	if(positionalOptionals.size() < 1)
 	{
@@ -42,7 +53,6 @@ void DelCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 				}
 				else
 				{
-					std::string absPath = Path::getAbsPath(virtualConsole.getCurDirectoryPath(), path);
 					std::string dirName = Path::getDirectoryName(absPath);
 					std::string pathName = Path::getPathName(absPath);
 
@@ -54,18 +64,18 @@ void DelCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 					{
 						std::string& curDirName = dirs.front();
 
-						std::string absPath = Path::join(curDirName, pathName, Path::InnerSeparator());
-						if(VirtualFileSystem::getInstPtr()->remove(absPath))
+						std::string curAbsPath = Path::join(curDirName, pathName, Path::InnerSeparator());
+						if(VirtualFileSystem::getInstPtr()->remove(curAbsPath))
 						{
-							output << "删除文件 -  " << absPath << std::endl;
+							output << "删除文件 -  " << curAbsPath << std::endl;
 						}
 
 						VirtualNodeInfo info(curDirName);
 						if(info.isDirectory())
 						{
-							for(VirtualNodeInfo::Iterator it = info.begin();  it != info.end(); it++)
+							for(VirtualNodeInfo::Iterator subIt = info.begin();  subIt != info.end(); subIt++)
 							{
-								VirtualNodeInfo subInfo = *it;
+								VirtualNodeInfo subInfo = *subIt;
 								if(subInfo.isDirectory() && !subInfo.isSpecialDirectory())
 								{
 									std::string subDir = Path::join(curDirName,  subInfo.getName(), Path::InnerSeparator());
@@ -112,3 +122,4 @@ void DelCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 	}
 
 }
+

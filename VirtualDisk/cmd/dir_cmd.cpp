@@ -28,15 +28,28 @@ void DirCmd::outputNodeInfo(VirtualNodeInfo& nodeInfo, std::ostream& output)
 	output << "\n";
 }
 
+void DirCmd::registerOptions()
+{
+	m_supportOptions.insert("s");
+	m_supportOptions.insert("ad");
+}
+
 void DirCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 {
+	std::ostream& output = virtualConsole.getOutput();
+
 	std::set<std::string> optionals;
 	std::vector<std::string> positionalOptions;;
 
 	cmdParser.parseArg(optionals, positionalOptions);
 
-	bool isDeep = (optionals.find("/s") != optionals.end());
-	bool isOnlyDir = (optionals.find("/ad") != optionals.end());
+	if(!checkOptions(output, optionals))
+	{
+		return;
+	}
+
+	bool isDeep = (optionals.find("s") != optionals.end());
+	bool isOnlyDir = (optionals.find("ad") != optionals.end());
 
 	std::vector<std::string> absPathNames;
 

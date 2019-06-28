@@ -18,6 +18,12 @@ void Glob::search(const std::string& pattern, std::vector<std::string>& outValue
 		std::string pathName = Path::getPathName(pattern);
 		std::string lowerPathName = StringUtils::getLower(pathName);
 
+		// pattern is drive path
+		if(dir->getDirType() == VirtualDirectory::Dir_Disk && pathName == "")
+		{
+			outValue.push_back(pattern);
+		}
+
 		for(VirtualDirectory::Iterator it = dir->begin(); it != dir->end(); it++)
 		{
 			const std::string& key = it->first;
@@ -49,7 +55,7 @@ bool Glob::isMatch(const std::string& pattern, const std::string& value)
 		}
 		else if(*patternIt == '*')
 		{
-			while(*patternIt == '*')
+			while(patternIt != pattern.end() && *patternIt == '*')
 				patternIt++;
 
 			if(patternIt == pattern.end())

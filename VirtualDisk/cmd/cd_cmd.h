@@ -5,5 +5,10 @@
 class CdCmd : public ICommand
 {
 public:
+	CdCmd();
+
 	virtual void execute(CommandParser& cmdParser, VirtualConsole& virtualConsole);
+
+private:
+	bool m_isSupportGlob;
 };

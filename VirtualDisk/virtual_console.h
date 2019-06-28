@@ -38,6 +38,8 @@ public:
 		return m_curDirectory;
 	}
 
+	void executeCmd(const std::string& cmdStr);
+
 private:
 	void printHeader();
 

@@ -64,7 +64,7 @@ void CommandParser::parseArg(std::set<std::string>& outOpitions, std::vector<std
 		if(arg == "")
 			break;
 		if(arg[0] == '/')
-			outOpitions.insert(arg);
+			outOpitions.insert(arg.substr(1));
 		else
 			outPositionalOpitions.push_back(arg);
 	}

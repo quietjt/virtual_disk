@@ -2,6 +2,12 @@
 #include "../predefine.h"
 #include "../file_system/path.h"
 #include "../file_system/virtual_node_info.h"
+#include "../utils/glob.h"
+
+CdCmd::CdCmd() : m_isSupportGlob(false)
+{
+
+}
 
 void CdCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 {
@@ -37,7 +43,21 @@ void CdCmd::execute(CommandParser& cmdParser, VirtualConsole& virtualConsole)
 	{
 		const std::string cdPath = paths[0];
 		std::string absPath = Path::getAbsPath(virtualConsole.getCurDirectoryPath(), cdPath);
-	
+
+		if(m_isSupportGlob)
+		{
+			std::vector<std::string> matchedPath;
+			Glob::search(absPath, matchedPath);
+
+			if(matchedPath.size() <= 0)
+			{
+				output << "文件名、目录名或卷标语法不正确。" << std::endl;
+				return;
+			}
+
+			absPath = matchedPath[0];
+		}
+
 		VirtualNodeInfo info(absPath);
 		if(!info.isExist())
 		{

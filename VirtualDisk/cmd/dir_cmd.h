@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../predefine.h"
-#include "i_command.h"
+#include "cmd_base.h"
 
 class VirtualNodeInfo;
 
-class DirCmd : public ICommand
+class DirCmd : public CommandBase
 {
 public:
 	virtual void execute(CommandParser& cmdParser, VirtualConsole& virtualConsole);
@@ -17,4 +17,6 @@ private:
 	void displayNodeInfo(VirtualNodeInfo& nodeInfo, std::ostream& output, bool isOnlyDir, int* totalSize, int *totalFile,  int* totalDir);
 
 	void outputNodeInfo(VirtualNodeInfo& nodeInfo, std::ostream& output);
+protected:
+	virtual void registerOptions();
 };

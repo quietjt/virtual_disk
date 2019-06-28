@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cmd\cmd_base.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\command_parser.cpp"
 				>
 			</File>
@@ -306,6 +310,10 @@
 			>
 			<File
 				RelativePath=".\cmd\cd_cmd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cmd\cmd_base.h"
 				>
 			</File>
 			<File
